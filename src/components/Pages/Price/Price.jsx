@@ -22,7 +22,7 @@ function Price() {
   const filteredProducts = e => {
     setFilter(gsm.filter(product => product.name.includes(e.target.name)));
   };
-  let course = 38.5;
+  let course = 37.5;
   const visisbleProducts = filter ? filter : gsm;
   gsm.sort((a, b) => a.name.localeCompare(b.name));
   gsm.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0));
