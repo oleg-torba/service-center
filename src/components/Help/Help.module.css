@@ -1,0 +1,99 @@
+.helpTitle {
+  font-size: 22px;
+  font-weight: 500;
+  text-transform: uppercase;
+  @media screen and (min-width: 1200px) {
+    font-size: 42px;
+  }
+}
+
+.input {
+  height: 20px;
+  background-color: transparent;
+  color: #f1f0ee;
+  margin-bottom: 20px;
+  padding: 5px;
+  border: 1px solid #f1f0ee;
+  border-radius: 4px;
+  @media screen and (min-width: 1200px) {
+    padding: 15px;
+    margin-bottom: 40px;
+    height: 40px;
+  }
+}
+
+.helpForm {
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+  @media screen and (min-width: 1200px) {
+    margin-left: 105px;
+    margin-top: 0px;
+    width: 100%;
+  }
+}
+
+.helpImg {
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+  }
+  @media screen and (min-width: 1200px) {
+    width: 735px;
+  }
+}
+.textarea {
+  height: 100%;
+  background-color: transparent;
+  color: #f1f0ee;
+  padding: 5px;
+  border: 1px solid #f1f0ee;
+  border-radius: 4px;
+  @media screen and (min-width: 1200px) {
+    padding: 15px;
+  }
+}
+
+.helpBlock {
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (min-width: 1200px) {
+    justify-content: space-between;
+    flex-direction: inherit;
+  }
+}
+
+.button {
+  padding: 5px;
+  height: 30px;
+  margin-top: 20px;
+  font-size: 12px;
+  text-align: center;
+  background-color: #FFC700;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  @media screen and (min-width: 1200px) {
+    width: 100%;
+    padding: 10px;
+    height: 60px;
+    margin-top: 40px;
+    font-size: 22px;
+  }
+}
+
+.helpTitleTG {
+  margin: 10px 0 10px 0;
+  font-size: 12px;
+  @media screen and (min-width: 1200px) {
+    font-size: 16px;
+  }
+}
+
+.helpTitleTG a {
+  color: #FFC700;
+}

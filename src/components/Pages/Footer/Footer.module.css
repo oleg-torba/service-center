@@ -1,0 +1,30 @@
+
+.apiLink {
+  margin-bottom: 15px;
+  font-size: 12px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  @media screen and(min-width: 1200px) {
+    font-size: 20px;
+  }
+}
+.footer {
+    display: flex;
+    justify-content: space-between;
+    color: #f1f0ee;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 17px 0;
+    border-top: 1px solid #ffffff;
+    align-items: center;
+    @media screen and(min-width: 1200px) {
+      padding: 34px 0;
+      font-size: 20px;
+    }
+  }
+
+  .link {
+   color: #FFC700;
+  }
+

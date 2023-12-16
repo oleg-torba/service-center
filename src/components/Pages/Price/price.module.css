@@ -1,0 +1,178 @@
+.priceTable {
+  border-collapse: collapse;
+  border: 1px solid lightgray;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ffc700;
+    border-radius: 4px 0px 0px 4px;
+    height: 20px;
+  }
+  @media screen and (min-width: 1200px) {
+    font-size: 18px;
+  }
+}
+
+.tableTitle {
+  border: 1px solid lightgray;
+  transition: 0.5s;
+  padding: 20px 10px;
+  font-weight: bold;
+}
+
+.tableItem {
+  padding: 20px 10px;
+  font-weight: bold;
+
+  text-align: left;
+  border-bottom: 1px solid lightgray;
+}
+.centeredEllipsis {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.unavailable {
+  color: #ffc700;
+  border: 1px solid lightgray;
+  font-weight: bold;
+}
+
+.mainBlock {
+  display: block;
+
+  margin-bottom: 20px;
+
+  max-height: 48.8vh;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media screen and (min-width: 1200px) {
+    max-height: 49vh;
+    display: flex;
+  }
+}
+
+.sectionForm {
+  padding: 20px 0;
+  @media screen and (min-width: 1200px) {
+    padding: 40px 0;
+  }
+}
+
+.repairTitle {
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 1px solid white;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  font-size: 12px;
+  @media screen and (min-width: 1200px) {
+    font-size: 18px;
+  }
+}
+
+.repairBlock {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+}
+
+.availableBlock {
+  display: none;
+  @media screen and (min-width: 1200px) {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid white;
+    height: max-content;
+    margin-right: 25px;
+    padding: 10px;
+    gap: 30px;
+    margin-bottom: 0;
+  }
+}
+
+.filterButton {
+  background-color: transparent;
+  color: white;
+  border: 1px solid darkslategray;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 10px;
+  @media screen and (min-width: 1200px) {
+    font-size: 18px;
+  }
+  &:hover {
+    color: #ffc700;
+    border: 1px solid #ffc700;
+    opacity: 1;
+    transition: 0.5s;
+  }
+  &:focus {
+    color: #ffc700;
+    border: 1px solid #ffc700;
+    opacity: 1;
+    transition: 0.5s;
+  }
+  &:active {
+    .activeButton {
+      background-color: #ffc700;
+      color: black;
+      opacity: 1;
+    }
+  }
+}
+
+.star {
+  font-size: 8px;
+  margin-bottom: 5px;
+  @media screen and (min-width: 1200px) {
+    display: none;
+  }
+}
+
+.filterModalBlock {
+  margin-bottom: 10px;
+  border: 1px solid lightgray;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  @media screen and (min-width: 1200px) {
+    display: none;
+  }
+}
+.filterString {
+  font-size: 12px;
+  border: none;
+  font-weight: bold;
+  background-color: transparent;
+  color: #f1f0ee;
+  padding: 5px;
+  &:focus {
+    color: #ffc700;
+    transition: 0.5s;
+  }
+  &:hover {
+    color: #ffc700;
+    transition: 0.5s;
+  }
+  &:active {
+    .activeButton {
+      background-color: #ffc700;
+      color: black;
+      transition: 0.5s;
+    }
+  }
+}

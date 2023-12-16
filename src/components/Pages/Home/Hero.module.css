@@ -1,0 +1,163 @@
+/* .mainContainer {
+  padding: 0 25px;
+  @media screen and (min-width: 1200px) {
+    padding: 0px 50px;
+  }
+} */
+
+.mainTitleBlock {
+  display: block;
+  @media screen and (min-width: 1200px) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.repairTitle {
+  margin-bottom: 20px;
+  color: #FFC700;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: bold;
+  letter-spacing: 2.52px;
+  @media screen and (min-width: 1200px) {
+    font-size: 84px;
+    font-style: normal;
+    font-weight: 700;
+    margin-bottom: 0;
+  }
+}
+
+.repairTitleSecond {
+  color: #f1f0ee;
+  font-size: 20px;
+  max-width: 400px;
+  font-weight: bold;
+}
+.hero {
+  background-image: url(../../../images//hero.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  padding: 170px 0;
+
+  @media screen and (min-width: 1200px) {
+    padding: 344px 0;
+    background-image: url(../../../images//hero.jpg);
+
+    @media (min-device-pixel-ratio: 2),
+      (min-resolution: 192dpi),
+      (min-resolution: 2dppx) {
+      background-image: linear-gradient(
+          rgba(47, 48, 58, 0.4),
+          rgba(47, 48, 58, 0.4)
+        ),
+        url(../../../images//hero2x.jpg);
+    }
+  }
+}
+
+.consultation {
+  position: absolute;
+  top: 0;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 500;
+  text-transform: uppercase;
+  @media screen and (min-width: 1200px) {
+    font-size: 42px;
+  }
+}
+
+.serviceBlock {
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
+  @media screen and (min-width: 1200px) {
+    margin-top: 40px;
+    flex-direction: inherit;
+    justify-content: space-between;
+  }
+}
+
+.service {
+
+  margin-top: 20px;
+  @media screen and (min-width: 1200px) {
+    margin-top: 0;
+    width: 100%;
+margin-left: 20px;
+  }
+}
+
+.serviceList {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 42px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.repairBlock {
+  margin-top: 40px;
+  width: 100%;
+  @media screen and (min-width: 1200px) {
+    margin-top: 20;
+  }
+}
+
+.serviceListPrice {
+  display: flex;
+
+  border-bottom: 1px solid white;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 5px 0;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.serviceTitle {
+  font-size: 12px;
+  font-weight: bold;
+  @media screen and (min-width: 1200px) {
+    font-size: 28px;
+  }
+}
+
+.serviceTitleSecond {
+  font-size: 12px;
+
+  font-weight: bold;
+  @media screen and (min-width: 1200px) {
+    font-size: 28px;
+  }
+}
+
+.serviceTitlePrice {
+  font-size: 20px;
+  font-weight: bold;
+  @media screen and (max-width: 1199px) {
+    font-size: 12px;
+  }
+}
+.serviceTitleSpan {
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: auto;
+  text-align: center;
+  color: #FFC700;
+  @media screen and (max-width: 1199px) {
+    font-size: 12px;
+  }
+}
+

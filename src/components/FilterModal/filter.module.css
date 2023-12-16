@@ -1,0 +1,10 @@
+.modal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  box-sizing: content-box;
+  background-color: transparent;
+  border-top: 1px solid lightgray;
+  max-height: max-content;
+  padding: 5px;
+}

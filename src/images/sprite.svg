@@ -1,0 +1,8 @@
+<svg width="0" height="0" class="hidden">
+  <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 19" id="foundIcon">
+    <path d="M18.155 3.703a1.5 1.5 0 0 0-1.364-1.625L3.343.9A1.5 1.5 0 1 0 3.08 3.89l11.955 1.046L13.99 16.89a1.5 1.5 0 1 0 2.988.261l1.177-13.448ZM2.304 17.577 17.624 4.72l-1.928-2.298L.376 15.279l1.928 2.298Z" fill="#F1F0EE"></path>
+  </symbol>
+</svg>
+<svg class="icon">
+  <use xlink:href="#foundIcon-optimized"></use>
+</svg>

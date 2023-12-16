@@ -1,0 +1,58 @@
+@import-normalize; /* bring in normalize.css styles */
+
+body {
+  margin: 0;
+  font-family: 'Mariupol', sans-serif;
+  color: #f1f0ee;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #191919;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+ul,
+li,
+p,
+span,
+h1,
+h2,
+h3 {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+li {
+  list-style-type: none;
+}
+.container {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px 15px;
+  @media screen and (min-width: 768px) {
+    padding: 15 25px;
+  }
+  @media screen and (min-width: 1200px) {
+    padding: 15 50px;
+  }
+}
+
+img {
+  display: block;
+}
+
+.section {
+  padding: 40px 0;
+  @media screen and (min-width: 1200px) {
+    padding: 80px 0;
+  }
+}

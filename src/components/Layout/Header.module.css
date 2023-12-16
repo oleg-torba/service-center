@@ -1,0 +1,49 @@
+
+
+.header {
+  display: none;
+  @media screen and (min-width: 1200px) {
+    display: flex;
+    justify-content: space-between;
+    color: #f1f0ee;
+    font-size: 20px;
+    border-bottom: 1px solid #ffffff;
+    padding: 34px 0;
+    align-items: center;
+  }
+}
+
+.mainTitle {
+  font-size: 20px;
+  font-weight: bold;
+
+  @media screen and (min-width: 1200px) {
+    font-size: 32px;
+    font-weight: 700;
+  }
+}
+
+.title {
+  font-weight: bold;
+  padding: 2px;
+}
+.mobMenu {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobMenuTitle,
+.mobMenuMainTitle {
+  display: block;
+  margin-bottom: 30px;
+  font-weight: bold;
+  padding: 3px;
+  &:hover,
+  :focus {
+    color: #FFC700;
+  }
+}
+
+.suspense {
+  text-align: center;
+}
