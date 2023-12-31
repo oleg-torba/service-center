@@ -33,9 +33,12 @@ function Price() {
     setStatus('pending');
     FetchDetails(searchQuery).then(res => {
       const itemsArray = res[0].items;
-      const fullArray = itemsArray.filter(data =>
-        data.name.toLowerCase().includes(searchQuery.toLowerCase())
+      const searchWords = searchQuery.split(' ');
+      const regex = new RegExp(
+        searchWords.map(word => `(?=.*\\b${word}\\b)`).join(''),
+        'i'
       );
+      const fullArray = itemsArray.filter(data => regex.test(data.name));
       setStatus('resolved');
       setGsm(
         fullArray.filter(
@@ -68,7 +71,7 @@ function Price() {
   }
   if (gsm.length < 1 && status === 'resolved') {
     NotificationManager.error(
-      'Зроби пошук по моделі (A022, S21, C21Y)',
+      'У нашій базі відсутня інформація про цей пристрій',
       'Упс, помилка',
       3000
     );
