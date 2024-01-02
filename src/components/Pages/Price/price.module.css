@@ -48,7 +48,7 @@
   display: block;
 
   margin-bottom: 20px;
-
+  margin-top: 20px;
   max-height: 48.8vh;
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -174,5 +174,12 @@
       color: black;
       transition: 0.5s;
     }
+  }
+}
+.updateString {
+  color: #ffc700;
+  font-size: 12px;
+  @media screen and (min-width: 1200px) {
+    font-size: 16px;
   }
 }

@@ -13,6 +13,7 @@ function Price() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('query') ?? '';
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [createdAt, setCreatedAT] = useState('');
   const toggleModal = () => {
     setShowFilterModal(!showFilterModal);
   };
@@ -33,13 +34,26 @@ function Price() {
     setStatus('pending');
     FetchDetails(searchQuery).then(res => {
       const itemsArray = res[0].items;
+      const dateString = res[0].createdAt;
+      const dateObject = new Date(dateString);
+      const year = dateObject.getFullYear();
+      const month = dateObject.getMonth() + 1;
+      const day = dateObject.getDate();
+      const hours = dateObject.getHours();
+      const minutes = dateObject.getMinutes();
+
+      const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${
+        day < 10 ? '0' : ''
+      }${day} ${hours}:${minutes}`;
       const searchWords = searchQuery.split(' ');
       const regex = new RegExp(
         searchWords.map(word => `(?=.*\\b${word}\\b)`).join(''),
         'i'
       );
+      console.log(createdAt);
       const fullArray = itemsArray.filter(data => regex.test(data.name));
       setStatus('resolved');
+      setCreatedAT(formattedDate);
       setGsm(
         fullArray.filter(
           data =>
@@ -59,7 +73,7 @@ function Price() {
 
       setFilter('');
     });
-  }, [searchQuery]);
+  }, [createdAt, searchQuery]);
 
   function formSubmit(query) {
     if (query === searchQuery) {
@@ -88,6 +102,10 @@ function Price() {
         </div>
       ) : (
         <>
+          <span className={priceCss.updateString}>
+            Останнє оновлення бази: {createdAt}
+          </span>
+
           <div className={priceCss.mainBlock}>
             {gsm.length > 0 && (
               <>
@@ -98,6 +116,7 @@ function Price() {
                   >
                     Фільтри
                   </button>
+
                   {showFilterModal === true && (
                     <FilterModal filteredProducts={filteredProducts} />
                   )}
@@ -175,14 +194,12 @@ function Price() {
                     Скло камери
                   </button>
                 </div>
-                <p className={priceCss.star}>
-                  * в ціну входить вартість запчастини з роботою{' '}
-                </p>
+
                 <table className={priceCss.priceTable}>
                   <tbody>
                     <tr>
                       <th className={priceCss.tableTitle}>Назва</th>
-                      <th className={priceCss.tableTitle}>Ціна*</th>
+                      <th className={priceCss.tableTitle}>Ціна</th>
                       <th className={priceCss.tableTitle}>Наявність</th>
                     </tr>
 
