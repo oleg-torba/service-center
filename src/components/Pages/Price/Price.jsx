@@ -13,7 +13,7 @@ function Price() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('query') ?? '';
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [createdAt, setCreatedAT] = useState('');
+  const [createdAt, setCreatedAT] = useState(null);
   const toggleModal = () => {
     setShowFilterModal(!showFilterModal);
   };
@@ -23,7 +23,7 @@ function Price() {
   const filteredProducts = e => {
     setFilter(gsm.filter(product => product.name.includes(e.target.name)));
   };
-  let course = 40.5;
+  let course = 39.5;
   const visisbleProducts = filter ? filter : gsm;
   gsm.sort((a, b) => a.name.localeCompare(b.name));
   gsm.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0));
@@ -33,9 +33,8 @@ function Price() {
     }
     setStatus('pending');
     FetchDetails(searchQuery).then(res => {
-      const itemsArray = res[0].items;
-      const dateString = res[0].createdAt;
-      const dateObject = new Date(dateString);
+      const itemsArray = res[0];
+      const dateObject = new Date(itemsArray.createdAt);
       const year = dateObject.getFullYear();
       const month = dateObject.getMonth() + 1;
       const day = dateObject.getDate();
@@ -45,13 +44,13 @@ function Price() {
       const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${
         day < 10 ? '0' : ''
       }${day} ${hours}:${minutes}`;
+      console.log(createdAt);
       const searchWords = searchQuery.split(' ');
       const regex = new RegExp(
         searchWords.map(word => `(?=.*\\b${word}\\b)`).join(''),
         'i'
       );
-      console.log(createdAt);
-      const fullArray = itemsArray.filter(data => regex.test(data.name));
+      const fullArray = itemsArray.items.filter(data => regex.test(data.name));
       setStatus('resolved');
       setCreatedAT(formattedDate);
       setGsm(
@@ -102,9 +101,11 @@ function Price() {
         </div>
       ) : (
         <>
-          <span className={priceCss.updateString}>
-            Останнє оновлення бази: {createdAt}
-          </span>
+          {createdAt !== null && (
+            <span className={priceCss.updateString}>
+              Останнє оновлення бази: {createdAt}
+            </span>
+          )}
 
           <div className={priceCss.mainBlock}>
             {gsm.length > 0 && (

@@ -25,8 +25,6 @@ export function Help() {
     }
   };
 
- 
-
   const handleSubmit = async e => {
     e.preventDefault();
 
@@ -36,12 +34,11 @@ export function Help() {
       message,
     });
     if (res.status === 201) {
-      alert("Дані успішно відправлено")
-      setMessage('')
-      setName('')
-      setNumber('')
+      alert('Дані успішно відправлено');
+      setMessage('');
+      setName('');
+      setNumber('');
       return res.data;
-      
     }
   };
 
@@ -53,10 +50,11 @@ export function Help() {
         <a href="https://t.me/oleg_torba">Telegram</a> або заповніть форму
       </p>
       <div className={helpCss.helpBlock}>
-        <img src={helpImg} alt="Help"/>
+        <img src={helpImg} alt="Help" />
         <form className={helpCss.helpForm} onSubmit={handleSubmit}>
           <input
             className={helpCss.input}
+            autoComplete="off"
             type="text"
             name="name"
             value={name}
@@ -66,6 +64,7 @@ export function Help() {
           />
           <input
             className={helpCss.input}
+            autoComplete="off"
             type="tel"
             name="number"
             value={phone}
