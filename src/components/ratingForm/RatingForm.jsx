@@ -46,7 +46,7 @@ const RatingForm = () => {
                 <button type="button" onClick={() => handleSubmit(4)}>
                   4
                 </button>
-                <button type="button" onClick={() => handleSubmit(4)}>
+                <button type="button" onClick={() => handleSubmit(5)}>
                   5
                 </button>
               </div>
