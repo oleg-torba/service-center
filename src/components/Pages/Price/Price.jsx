@@ -23,7 +23,7 @@ function Price() {
   const filteredProducts = e => {
     setFilter(gsm.filter(product => product.name.includes(e.target.name)));
   };
-  let course = 39.5;
+  let course = 38.5;
   const visisbleProducts = filter ? filter : gsm;
   gsm.sort((a, b) => a.name.localeCompare(b.name));
   gsm.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0));
@@ -35,6 +35,7 @@ function Price() {
     FetchDetails(searchQuery).then(res => {
       const itemsArray = res[0];
       const dateObject = new Date(itemsArray.createdAt);
+      console.log(dateObject);
       const year = dateObject.getFullYear();
       const month = dateObject.getMonth() + 1;
       const day = dateObject.getDate();
@@ -202,6 +203,7 @@ function Price() {
                       <th className={priceCss.tableTitle}>Назва</th>
                       <th className={priceCss.tableTitle}>Ціна</th>
                       <th className={priceCss.tableTitle}>Наявність</th>
+                      <th className={priceCss.tableTitle}>Гарантія</th>
                     </tr>
 
                     {visisbleProducts.map(item => {
@@ -219,6 +221,7 @@ function Price() {
                       let ICNewIphoneRepair =
                         Math.ceil(((item.price + 50) * course) / 50) * 50;
                       let available = item.available;
+                      let copyDisplays = item.name.includes('OLED');
                       let CasePrice =
                         Math.ceil(((item.price + 4) * course) / 50) * 50;
                       let newIphone =
@@ -260,6 +263,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -279,6 +283,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -298,6 +303,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -317,6 +323,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -336,6 +343,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -355,6 +363,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -374,6 +383,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -398,6 +408,13 @@ function Price() {
                               </td>
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
+                            )}
+                            {copyDisplays ? (
+                              <td className={priceCss.unavailable}>
+                                Без гарантії
+                              </td>
+                            ) : (
+                              <td className={priceCss.tableTitle}>30 днів</td>
                             )}
                           </tr>
                         );
@@ -426,6 +443,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -450,6 +468,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -474,6 +493,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -492,6 +512,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -516,6 +537,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -543,6 +565,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -567,6 +590,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -591,6 +615,7 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
+                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       } else {
