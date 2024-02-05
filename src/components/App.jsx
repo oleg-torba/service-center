@@ -2,7 +2,6 @@ import { Suspense, lazy } from 'react';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import { Route, Routes } from 'react-router-dom';
-import RatingForm from './ratingForm/RatingForm';
 const Home = lazy(() => import('./Pages/Home/Home'));
 const Price = lazy(() => import('./Pages/Price/Price'));
 const Layout = lazy(() => import('./Layout/Layout'));
@@ -17,7 +16,6 @@ export const App = () => {
         </Route>
         <Route path="/*" element={<Home />} />
       </Routes>
-      <RatingForm />
       <NotificationContainer />
     </Suspense>
   );
