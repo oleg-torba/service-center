@@ -28,9 +28,9 @@ function Price() {
   gsm.sort((a, b) => a.name.localeCompare(b.name));
   gsm.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0));
   useEffect(() => {
-    // if (searchQuery === '') {
-    //   return;
-    // }
+    if (searchQuery === '') {
+      return;
+    }
     setStatus('pending');
     FetchDetails(searchQuery).then(res => {
       const itemsArray = res[0];
