@@ -13,7 +13,7 @@ function Price() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('query') ?? '';
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [createdAt, setCreatedAT] = useState(null);
+  const [createdAt, setCreatedAt] = useState(null);
   const toggleModal = () => {
     setShowFilterModal(!showFilterModal);
   };
@@ -31,47 +31,59 @@ function Price() {
     if (searchQuery === '') {
       return;
     }
+
     setStatus('pending');
-    FetchDetails(searchQuery).then(res => {
-      const itemsArray = res[0];
-      const dateObject = new Date(itemsArray.createdAt);
-      const year = dateObject.getFullYear();
-      const month = dateObject.getMonth() + 1;
-      const day = dateObject.getDate();
-      const hours = dateObject.getHours();
-      const minutes = dateObject.getMinutes();
 
-      const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${
-        day < 10 ? '0' : ''
-      }${day} ${hours}:${minutes}`;
-      const searchWords = searchQuery.split(' ');
-      const regex = new RegExp(
-        searchWords.map(word => `(?=.*\\b${word}\\b)`).join(''),
-        'i'
-      );
-      const fullArray = itemsArray.items.filter(data => regex.test(data.name));
+    const fetchData = async () => {
+      try {
+        const res = await FetchDetails(searchQuery);
+        const itemsArray = res[0];
+        const dateObject = new Date(itemsArray.createdAt);
+        const year = dateObject.getFullYear();
+        const month = dateObject.getMonth() + 1;
+        const day = dateObject.getDate();
+        const hours = dateObject.getHours();
+        const minutes = dateObject.getMinutes();
 
-      setCreatedAT(formattedDate);
-      setGsm(
-        fullArray.filter(
-          data =>
-            !data.name.includes('MECHANIC') &&
-            !data.name.includes('Шлейф для тестера') &&
-            !data.name.includes('для програматора') &&
-            !data.name.includes('без шлейфа') &&
-            !data.name.includes('INCELL') &&
-            !data.name.includes('скотч для фіксації') &&
-            !data.name.includes('в упаковці') &&
-            !data.name.includes('TORNADO') &&
-            !data.name.includes('Mechanic') &&
-            !data.name.includes('TOTA') &&
-            !data.name.includes('Уцінка')
-        )
-      );
-      setStatus('resolved');
-      setFilter('');
-    });
-  }, [createdAt, searchQuery]);
+        const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${
+          day < 10 ? '0' : ''
+        }${day} ${hours}:${minutes}`;
+        const searchWords = searchQuery.split(' ');
+        const regex = new RegExp(
+          searchWords.map(word => `(?=.*\\b${word}\\b)`).join(''),
+          'i'
+        );
+        const fullArray = itemsArray.items.filter(data =>
+          regex.test(data.name)
+        );
+
+        setCreatedAt(formattedDate);
+        setGsm(
+          fullArray.filter(
+            data =>
+              !data.name.includes('MECHANIC') &&
+              !data.name.includes('Шлейф для тестера') &&
+              !data.name.includes('для програматора') &&
+              !data.name.includes('без шлейфа') &&
+              !data.name.includes('INCELL') &&
+              !data.name.includes('скотч для фіксації') &&
+              !data.name.includes('в упаковці') &&
+              !data.name.includes('TORNADO') &&
+              !data.name.includes('Mechanic') &&
+              !data.name.includes('TOTA') &&
+              !data.name.includes('Уцінка')
+          )
+        );
+        setStatus('resolved');
+        setFilter('');
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setStatus('error');
+      }
+    };
+
+    fetchData();
+  }, [searchQuery]);
 
   function formSubmit(query) {
     if (query === searchQuery) {
