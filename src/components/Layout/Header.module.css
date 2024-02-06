@@ -1,5 +1,3 @@
-
-
 .header {
   display: none;
   @media screen and (min-width: 1200px) {
@@ -40,7 +38,7 @@
   padding: 3px;
   &:hover,
   :focus {
-    color: #FFC700;
+    color: #ffc700;
   }
 }
 

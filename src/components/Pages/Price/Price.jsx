@@ -1,7 +1,6 @@
 import { Form } from 'components/Form/Form';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { ThreeDots } from 'react-loader-spinner';
 import priceCss from './price.module.css';
 import FetchDetails from 'fetch/fetch';
 import { ListStandart } from 'components/Standart/ListStandart';
@@ -9,6 +8,7 @@ import { NotificationManager } from 'react-notifications';
 import { Help } from 'components/Help/Help';
 import { Footer } from '../Footer/Footer';
 import { FilterModal } from 'components/FilterModal/FilterModal';
+import Loader from 'components/Loader/Loader';
 function Price() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('query') ?? '';
@@ -28,14 +28,13 @@ function Price() {
   gsm.sort((a, b) => a.name.localeCompare(b.name));
   gsm.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0));
   useEffect(() => {
-    if (searchQuery === '') {
-      return;
-    }
+    // if (searchQuery === '') {
+    //   return;
+    // }
     setStatus('pending');
     FetchDetails(searchQuery).then(res => {
       const itemsArray = res[0];
       const dateObject = new Date(itemsArray.createdAt);
-      console.log(dateObject);
       const year = dateObject.getFullYear();
       const month = dateObject.getMonth() + 1;
       const day = dateObject.getDate();
@@ -45,14 +44,13 @@ function Price() {
       const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${
         day < 10 ? '0' : ''
       }${day} ${hours}:${minutes}`;
-      console.log(createdAt);
       const searchWords = searchQuery.split(' ');
       const regex = new RegExp(
         searchWords.map(word => `(?=.*\\b${word}\\b)`).join(''),
         'i'
       );
       const fullArray = itemsArray.items.filter(data => regex.test(data.name));
-      setStatus('resolved');
+
       setCreatedAT(formattedDate);
       setGsm(
         fullArray.filter(
@@ -70,7 +68,7 @@ function Price() {
             !data.name.includes('Уцінка')
         )
       );
-
+      setStatus('resolved');
       setFilter('');
     });
   }, [createdAt, searchQuery]);
@@ -97,9 +95,7 @@ function Price() {
         <Form onSubmit={formSubmit} />
       </section>
       {status === 'pending' ? (
-        <div className={priceCss.centeredEllipsis}>
-          <ThreeDots color="orange" height={50} width={50} />
-        </div>
+        <Loader />
       ) : (
         <>
           {createdAt !== null && (
