@@ -2,7 +2,7 @@ import axios from 'axios';
 
 async function FetchDetails(query) {
   const request = await axios.get(
-    `https://price-new.onrender.com/api/search/:${query}`
+    `https://back-2cjl.onrender.com/api/search/:${query}`
   );
 
   return request.data;

@@ -1,3 +1,10 @@
+/* .mainContainer {
+  padding: 0 25px;
+  @media screen and (min-width: 1200px) {
+    padding: 0px 50px;
+  }
+} */
+
 .mainTitleBlock {
   display: block;
   @media screen and (min-width: 1200px) {
@@ -9,7 +16,7 @@
 
 .repairTitle {
   margin-bottom: 20px;
-  color: #ffc700;
+  color: #FFC700;
   font-size: 40px;
   font-style: normal;
   font-weight: bold;
@@ -80,11 +87,12 @@
 }
 
 .service {
+
   margin-top: 20px;
   @media screen and (min-width: 1200px) {
     margin-top: 0;
     width: 100%;
-    margin-left: 20px;
+margin-left: 20px;
   }
 }
 
@@ -147,8 +155,9 @@
   font-weight: bold;
   margin-left: auto;
   text-align: center;
-  color: #ffc700;
+  color: #FFC700;
   @media screen and (max-width: 1199px) {
     font-size: 12px;
   }
 }
+

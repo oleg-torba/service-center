@@ -24,8 +24,7 @@ export function Form({ onSubmit }) {
         placeholder="Введіть модель телефону"
         name="data"
         value={search}
-        onChange={handleChange}
-      />
+        onChange={handleChange} />
 
       <button className={formCss.searchButton} type="submit">
         Пошук
