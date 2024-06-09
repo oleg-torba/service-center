@@ -56,17 +56,6 @@ function Price() {
 
       setFilter('');
     });
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.MainButton.text = 'Шукати запчастини';
-    tg.MainButton.color = '#2cab37';
-    tg.MainButton.onClick(() => {
-      alert('Кнопка натиснута');
-    });
-
-    return () => {
-      tg.MainButton.offClick();
-    };
   }, [searchQuery]);
 
   function formSubmit(query) {
