@@ -42,14 +42,13 @@
   color: #ffc700;
   border: 1px solid lightgray;
   font-weight: bold;
-  padding: 20px 10px;
 }
 
 .mainBlock {
   display: block;
 
   margin-bottom: 20px;
-  margin-top: 20px;
+
   max-height: 48.8vh;
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -176,15 +175,4 @@
       transition: 0.5s;
     }
   }
-}
-.updateString {
-  color: #ffc700;
-  font-size: 12px;
-  @media screen and (min-width: 1200px) {
-    font-size: 16px;
-  }
-}
-
-.copyDisplays {
-  color: red;
 }

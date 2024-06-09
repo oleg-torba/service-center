@@ -1,6 +1,7 @@
 import { Form } from 'components/Form/Form';
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { ThreeDots } from 'react-loader-spinner';
 import priceCss from './price.module.css';
 import FetchDetails from 'fetch/fetch';
 import { ListStandart } from 'components/Standart/ListStandart';
@@ -8,12 +9,10 @@ import { NotificationManager } from 'react-notifications';
 import { Help } from 'components/Help/Help';
 import { Footer } from '../Footer/Footer';
 import { FilterModal } from 'components/FilterModal/FilterModal';
-import Loader from 'components/Loader/Loader';
 function Price() {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('query') ?? '';
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [createdAt, setCreatedAt] = useState(null);
   const toggleModal = () => {
     setShowFilterModal(!showFilterModal);
   };
@@ -31,58 +30,43 @@ function Price() {
     if (searchQuery === '') {
       return;
     }
-
     setStatus('pending');
+    FetchDetails(searchQuery).then(res => {
+      const itemsArray = res[0].items;
+      const fullArray = itemsArray.filter(data =>
+        data.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setStatus('resolved');
+      setGsm(
+        fullArray.filter(
+          data =>
+            !data.name.includes('MECHANIC') &&
+            !data.name.includes('Шлейф для тестера') &&
+            !data.name.includes('для програматора') &&
+            !data.name.includes('без шлейфа') &&
+            !data.name.includes('INCELL') &&
+            !data.name.includes('скотч для фіксації') &&
+            !data.name.includes('в упаковці') &&
+            !data.name.includes('TORNADO') &&
+            !data.name.includes('Mechanic') &&
+            !data.name.includes('TOTA') &&
+            !data.name.includes('Уцінка')
+        )
+      );
 
-    const fetchData = async () => {
-      try {
-        const res = await FetchDetails(searchQuery);
-        const itemsArray = res[0];
-        const dateObject = new Date(itemsArray.createdAt);
-        const year = dateObject.getFullYear();
-        const month = dateObject.getMonth() + 1;
-        const day = dateObject.getDate();
-        const hours = dateObject.getHours();
-        const minutes = dateObject.getMinutes();
+      setFilter('');
+    });
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.MainButton.text = 'Шукати запчастини';
+    tg.MainButton.color = '#2cab37';
+    tg.MainButton.onClick(() => {
+      alert('Кнопка натиснута');
+    });
 
-        const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${
-          day < 10 ? '0' : ''
-        }${day} ${hours}:${minutes}`;
-        const searchWords = searchQuery.split(' ');
-        const regex = new RegExp(
-          searchWords.map(word => `(?=.*\\b${word}\\b)`).join(''),
-          'i'
-        );
-        const fullArray = itemsArray.items.filter(data =>
-          regex.test(data.name)
-        );
-
-        setCreatedAt(formattedDate);
-        setGsm(
-          fullArray.filter(
-            data =>
-              !data.name.includes('MECHANIC') &&
-              !data.name.includes('Шлейф для тестера') &&
-              !data.name.includes('для програматора') &&
-              !data.name.includes('без шлейфа') &&
-              !data.name.includes('INCELL') &&
-              !data.name.includes('скотч для фіксації') &&
-              !data.name.includes('в упаковці') &&
-              !data.name.includes('TORNADO') &&
-              !data.name.includes('Mechanic') &&
-              !data.name.includes('TOTA') &&
-              !data.name.includes('Уцінка')
-          )
-        );
-        setStatus('resolved');
-        setFilter('');
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setStatus('error');
-      }
+    return () => {
+      tg.MainButton.offClick();
     };
-
-    fetchData();
   }, [searchQuery]);
 
   function formSubmit(query) {
@@ -95,7 +79,7 @@ function Price() {
   }
   if (gsm.length < 1 && status === 'resolved') {
     NotificationManager.error(
-      'У нашій базі відсутня інформація про цей пристрій',
+      'Зроби пошук по моделі (A022, S21, C21Y)',
       'Упс, помилка',
       3000
     );
@@ -107,15 +91,11 @@ function Price() {
         <Form onSubmit={formSubmit} />
       </section>
       {status === 'pending' ? (
-        <Loader />
+        <div className={priceCss.centeredEllipsis}>
+          <ThreeDots color="orange" height={50} width={50} />
+        </div>
       ) : (
         <>
-          {createdAt !== null && (
-            <span className={priceCss.updateString}>
-              Останнє оновлення бази: {createdAt}
-            </span>
-          )}
-
           <div className={priceCss.mainBlock}>
             {gsm.length > 0 && (
               <>
@@ -126,7 +106,6 @@ function Price() {
                   >
                     Фільтри
                   </button>
-
                   {showFilterModal === true && (
                     <FilterModal filteredProducts={filteredProducts} />
                   )}
@@ -204,14 +183,15 @@ function Price() {
                     Скло камери
                   </button>
                 </div>
-
+                <p className={priceCss.star}>
+                  * в ціну входить вартість запчастини з роботою{' '}
+                </p>
                 <table className={priceCss.priceTable}>
                   <tbody>
                     <tr>
                       <th className={priceCss.tableTitle}>Назва</th>
-                      <th className={priceCss.tableTitle}>Ціна</th>
+                      <th className={priceCss.tableTitle}>Ціна*</th>
                       <th className={priceCss.tableTitle}>Наявність</th>
-                      <th className={priceCss.tableTitle}>Гарантія</th>
                     </tr>
 
                     {visisbleProducts.map(item => {
@@ -229,7 +209,6 @@ function Price() {
                       let ICNewIphoneRepair =
                         Math.ceil(((item.price + 50) * course) / 50) * 50;
                       let available = item.available;
-                      let copyDisplays = item.name.includes('OLED');
                       let CasePrice =
                         Math.ceil(((item.price + 4) * course) / 50) * 50;
                       let newIphone =
@@ -271,7 +250,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -291,7 +269,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -311,7 +288,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -331,7 +307,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -351,7 +326,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -371,7 +345,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -391,7 +364,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -416,13 +388,6 @@ function Price() {
                               </td>
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                            {copyDisplays ? (
-                              <td className={priceCss.unavailable}>
-                                Без гарантії
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>30 днів</td>
                             )}
                           </tr>
                         );
@@ -451,7 +416,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -476,7 +440,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -501,7 +464,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -520,7 +482,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -545,7 +506,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -573,7 +533,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -598,7 +557,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       }
@@ -623,7 +581,6 @@ function Price() {
                             ) : (
                               <td className={priceCss.unavailable}>Запит</td>
                             )}
-                            <td className={priceCss.tableTitle}>30 днів</td>
                           </tr>
                         );
                       } else {
