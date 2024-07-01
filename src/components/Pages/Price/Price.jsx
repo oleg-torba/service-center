@@ -1,16 +1,19 @@
 import { Form } from 'components/Form/Form';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { ThreeDots } from 'react-loader-spinner';
 import priceCss from './price.module.css';
 import FetchDetails from 'fetch/fetch';
-import { ListStandart } from 'components/Standart/ListStandart';
-import { NotificationManager } from 'react-notifications';
 import { Help } from 'components/Help/Help';
 import { Footer } from '../Footer/Footer';
 import { FilterModal } from 'components/FilterModal/FilterModal';
+import { showToast } from 'components/Notifications/Notifications';
+import { useSelector } from 'react-redux';
+
 function Price() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const searchQuery = searchParams.get('query') ?? '';
   const [showFilterModal, setShowFilterModal] = useState(false);
   const toggleModal = () => {
@@ -22,56 +25,78 @@ function Price() {
   const filteredProducts = e => {
     setFilter(gsm.filter(product => product.name.includes(e.target.name)));
   };
-  let course = 38.5;
+
+  let course = 41;
   const visisbleProducts = filter ? filter : gsm;
+
   gsm.sort((a, b) => a.name.localeCompare(b.name));
   gsm.sort((a, b) => (b.available ? 1 : 0) - (a.available ? 1 : 0));
+  const token = useSelector(state => state.auth.token);
   useEffect(() => {
-    if (searchQuery === '') {
-      return;
-    }
-    setStatus('pending');
-    FetchDetails(searchQuery).then(res => {
-      const itemsArray = res[0].items;
-      const fullArray = itemsArray.filter(data =>
-        data.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setStatus('resolved');
-      setGsm(
-        fullArray.filter(
-          data =>
-            !data.name.includes('MECHANIC') &&
-            !data.name.includes('Шлейф для тестера') &&
-            !data.name.includes('для програматора') &&
-            !data.name.includes('без шлейфа') &&
-            !data.name.includes('INCELL') &&
-            !data.name.includes('скотч для фіксації') &&
-            !data.name.includes('в упаковці') &&
-            !data.name.includes('TORNADO') &&
-            !data.name.includes('Mechanic') &&
-            !data.name.includes('TOTA') &&
-            !data.name.includes('Уцінка')
-        )
-      );
+    const fetchData = async () => {
+      if (searchQuery === '') {
+        return;
+      }
 
-      setFilter('');
-    });
-  }, [searchQuery]);
+      setStatus('pending');
+
+      try {
+        const res = await FetchDetails(searchQuery, token);
+        const itemsArray = res[0].items;
+        const fullArray = itemsArray.filter(data =>
+          data.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        if (fullArray.length === 0) {
+          setStatus('resolved');
+          setGsm([]);
+          showToast(`По запиту ${searchQuery} нічого не знайдено`, 'error');
+        } else {
+          showToast(`Знайдено ${fullArray.length} позицій`, 'success');
+        }
+
+        setGsm(
+          fullArray.filter(
+            data =>
+              !data.name.includes('MECHANIC') &&
+              !data.name.includes('Шлейф для тестера') &&
+              !data.name.includes('для програматора') &&
+              !data.name.includes('без шлейфа') &&
+              !data.name.includes('INCELL') &&
+              !data.name.includes('скотч для фіксації') &&
+              !data.name.includes('в упаковці') &&
+              !data.name.includes('TORNADO') &&
+              !data.name.includes('Mechanic') &&
+              !data.name.includes('TOTA') &&
+              !data.name.includes('Уцінка')
+          )
+        );
+
+        setStatus('resolved');
+        setFilter('');
+      } catch (error) {
+        setStatus('resolved');
+        showToast('Сталася помилка під час пошуку', 'error');
+        navigate('/login');
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchData();
+    } else {
+      showToast('Доступ заборонений', 'error');
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate, searchQuery, token]);
 
   function formSubmit(query) {
     if (query === searchQuery) {
       return;
     }
 
-    setSearchParams(query.toLowerCase());
+    setSearchParams({ query: query.toLowerCase() });
     setGsm([]);
-  }
-  if (gsm.length < 1 && status === 'resolved') {
-    NotificationManager.error(
-      'Зроби пошук по моделі (A022, S21, C21Y)',
-      'Упс, помилка',
-      3000
-    );
+    setStatus('idle');
   }
 
   return (
@@ -195,8 +220,7 @@ function Price() {
                         Math.ceil(((item.price + 25) * course) / 50) * 50;
                       let newIphoneRepair =
                         Math.ceil(((item.price + 28) * course) / 50) * 50;
-                      let ICNewIphoneRepair =
-                        Math.ceil(((item.price + 50) * course) / 50) * 50;
+
                       let available = item.available;
                       let CasePrice =
                         Math.ceil(((item.price + 4) * course) / 50) * 50;
@@ -246,206 +270,10 @@ function Price() {
                         return (
                           <tr key={item.vendorCode}>
                             <td className={priceCss.tableItem}> {item.name}</td>
-
                             <td className={priceCss.tableTitle}>
                               {CasePrice} грн
                             </td>
 
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('Захисне скло')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            <td className={priceCss.tableTitle}>
-                              {CasePrice} грн
-                            </td>
-
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('Бузер')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            <td className={priceCss.tableTitle}>
-                              {priceCharge} грн
-                            </td>
-
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('SIM-тримач')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            <td className={priceCss.tableTitle}>
-                              {CasePrice} грн
-                            </td>
-
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('Рамка корпусу')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            <td className={priceCss.tableTitle}>
-                              {priceCharge} грн
-                            </td>
-
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('Динамік')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}>{item.name}</td>
-
-                            <td className={priceCss.tableTitle}>
-                              {priceCharge} грн
-                            </td>
-
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('Дисплей')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            {newIphone ? (
-                              <td className={priceCss.tableTitle}>
-                                {iphoneRepair} грн
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>
-                                {priceLCD} грн
-                              </td>
-                            )}
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {' '}
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (
-                        item.name.toLowerCase().includes('задня частина') ||
-                        item.name.toLowerCase().includes('кришка задня')
-                      ) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            {newIphone ? (
-                              <td className={priceCss.tableTitle}>
-                                {iphoneRepair} грн
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>
-                                {priceCharge} грн
-                              </td>
-                            )}
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('Камера')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            {newIphone ? (
-                              <td className={priceCss.tableTitle}>
-                                {newIphoneRepair} грн
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>
-                                {priceCharge} грн
-                              </td>
-                            )}
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('Корпус')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            {newIphone ? (
-                              <td className={priceCss.tableTitle}>
-                                {newIphoneRepair} грн
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>
-                                {priceCharge} грн
-                              </td>
-                            )}
                             {available ? (
                               <td className={priceCss.tableTitle}>
                                 {item.quantity_in_stock}
@@ -460,10 +288,10 @@ function Price() {
                         return (
                           <tr key={item.vendorCode}>
                             <td className={priceCss.tableItem}> {item.name}</td>
-
                             <td className={priceCss.tableTitle}>
                               {glassCam} грн
                             </td>
+
                             {available ? (
                               <td className={priceCss.tableTitle}>
                                 {item.quantity_in_stock}
@@ -474,71 +302,15 @@ function Price() {
                           </tr>
                         );
                       }
-                      if (item.name.includes('Мікросхема')) {
+
+                      if (newIphone) {
                         return (
                           <tr key={item.vendorCode}>
                             <td className={priceCss.tableItem}> {item.name}</td>
+                            <td className={priceCss.tableTitle}>
+                              {newIphoneRepair} грн
+                            </td>
 
-                            {newIphone ? (
-                              <td className={priceCss.tableTitle}>
-                                {ICNewIphoneRepair} грн
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>
-                                {priceCharge} грн
-                              </td>
-                            )}
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (
-                        item.name.toLowerCase().includes("роз'єм заряд") ||
-                        item.name.toLowerCase().includes('charge')
-                      ) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            {newIphone ? (
-                              <td className={priceCss.tableTitle}>
-                                {iphoneRepair} грн
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>
-                                {priceCharge} грн
-                              </td>
-                            )}
-                            {available ? (
-                              <td className={priceCss.tableTitle}>
-                                {item.quantity_in_stock}
-                              </td>
-                            ) : (
-                              <td className={priceCss.unavailable}>Запит</td>
-                            )}
-                          </tr>
-                        );
-                      }
-                      if (item.name.includes('Тачскрін')) {
-                        return (
-                          <tr key={item.vendorCode}>
-                            <td className={priceCss.tableItem}> {item.name}</td>
-
-                            {newIphone ? (
-                              <td className={priceCss.tableTitle}>
-                                {iphoneRepair} грн
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>
-                                {priceCharge} грн
-                              </td>
-                            )}
                             {available ? (
                               <td className={priceCss.tableTitle}>
                                 {item.quantity_in_stock}
@@ -553,16 +325,10 @@ function Price() {
                         return (
                           <tr key={item.vendorCode}>
                             <td className={priceCss.tableItem}> {item.name}</td>
+                            <td className={priceCss.tableTitle}>
+                              {priceCharge} грн
+                            </td>
 
-                            {newIphone ? (
-                              <td className={priceCss.tableTitle}>
-                                {iphoneRepair} грн
-                              </td>
-                            ) : (
-                              <td className={priceCss.tableTitle}>
-                                {priceCharge} грн
-                              </td>
-                            )}
                             {available ? (
                               <td className={priceCss.tableTitle}>
                                 {item.quantity_in_stock}
@@ -572,9 +338,66 @@ function Price() {
                             )}
                           </tr>
                         );
-                      } else {
-                        return null;
                       }
+
+                      if (item.name.includes('Захисне скло')) {
+                        return (
+                          <tr key={item.vendorCode}>
+                            <td className={priceCss.tableItem}> {item.name}</td>
+                            <td className={priceCss.tableTitle}>
+                              {CasePrice} грн
+                            </td>
+
+                            {available ? (
+                              <td className={priceCss.tableTitle}>
+                                {item.quantity_in_stock}
+                              </td>
+                            ) : (
+                              <td className={priceCss.unavailable}>Запит</td>
+                            )}
+                          </tr>
+                        );
+                      }
+
+                      if (
+                        item.name.includes('Тачскрін') ||
+                        item.name.includes('Модуль') ||
+                        item.name.includes('Дисплей') ||
+                        item.name.includes('матриця') ||
+                        item.name.includes('Сенсор')
+                      ) {
+                        return (
+                          <tr key={item.vendorCode}>
+                            <td className={priceCss.tableItem}> {item.name}</td>
+                            <td className={priceCss.tableTitle}>
+                              {priceLCD} грн
+                            </td>
+                            {available ? (
+                              <td className={priceCss.tableTitle}>
+                                {item.quantity_in_stock}
+                              </td>
+                            ) : (
+                              <td className={priceCss.unavailable}>Запит</td>
+                            )}
+                          </tr>
+                        );
+                      }
+
+                      return (
+                        <tr key={item.vendorCode}>
+                          <td className={priceCss.tableItem}> {item.name}</td>
+                          <td className={priceCss.tableTitle}>
+                            {iphoneRepair} грн
+                          </td>
+                          {available ? (
+                            <td className={priceCss.tableTitle}>
+                              {item.quantity_in_stock}
+                            </td>
+                          ) : (
+                            <td className={priceCss.unavailable}>Запит</td>
+                          )}
+                        </tr>
+                      );
                     })}
                   </tbody>
                 </table>
@@ -583,10 +406,7 @@ function Price() {
           </div>
         </>
       )}
-      <section className={priceCss.sectionForm}>
-        <Help />
-      </section>
-      <ListStandart />
+      <Help />
       <Footer />
     </>
   );

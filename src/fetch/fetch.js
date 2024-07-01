@@ -1,11 +1,19 @@
 import axios from 'axios';
 
-async function FetchDetails(query) {
-  const request = await axios.get(
-    `https://my-w0bk.onrender.com/api/search/:${query}`
-  );
-
-  return request.data;
+async function fetchDetails(query, token) {
+  try {
+    const response = await axios.get(
+      `http://localhost:3001/api/search/${query}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 }
 
-export default FetchDetails;
+export default fetchDetails;

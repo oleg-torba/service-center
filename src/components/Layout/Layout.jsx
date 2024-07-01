@@ -6,6 +6,8 @@ import heroCss from '../Pages/Home/Hero.module.css';
 import { MobModal } from 'components/MobMenuModal/MobModal';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import modalCss from '../MobMenuModal/modal.module.css';
+import { UserMenu } from 'components/Registration/LogOut';
+import { useSelector } from 'react-redux';
 
 function Layout() {
   const [showModal, setShowModal] = useState(false);
@@ -13,13 +15,14 @@ function Layout() {
   const toggleModal = () => {
     setShowModal(!showModal);
   };
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   return (
     <div className="container">
       <header>
         <div className={headerCss.header}>
           <NavLink
             className={headerCss.mainTitle}
-            to="/"
+            to="/home"
             state={{ from: location }}
             style={({ isActive }) =>
               isActive
@@ -58,14 +61,16 @@ function Layout() {
             Контакти
           </NavLink>
 
-        <p>068-68-68-599</p>
+          <p>068-68-68-599</p>
+          {isLoggedIn && <UserMenu />}
         </div>
+
         {showModal === true ? (
           <MobModal onClose={toggleModal}>
             <div className={headerCss.mobMenu}>
               <NavLink
                 className={headerCss.mobMenuMainTitle}
-                to="/"
+                to="/home"
                 style={({ isActive }) =>
                   isActive
                     ? {
@@ -103,6 +108,7 @@ function Layout() {
               </NavLink>
 
               <p>068-68-68-599</p>
+              {isLoggedIn && <UserMenu />}
             </div>
           </MobModal>
         ) : (
@@ -121,5 +127,4 @@ function Layout() {
     </div>
   );
 }
-
 export default Layout;
